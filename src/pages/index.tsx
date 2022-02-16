@@ -122,12 +122,20 @@ export default function Home({ postsPagination, preview }: HomeProps) {
             </button>
           )}
         </div>
+
+        {preview && (
+          <aside>
+            <Link href="/api/exit-preview">
+              <a>Sair do modo Preview</a>
+            </Link>
+          </aside>
+        )}
       </main>
     </>
   )
 }
 
-export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
+export const getStaticProps: GetStaticProps = async ({ preview = false, previewData }) => {
 
   const prismic = getPrismicClient();
 
@@ -135,6 +143,7 @@ export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
     Prismic.Predicates.at('document.type', 'posts')
   ], {
     pageSize: 3,
+    ref: previewData?.ref ?? null,
   })
 
   const posts = postsResponse.results.map(post => {
